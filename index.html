@@ -1,147 +1,398 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Akomorad Bank – Webapp</title>
-<link rel="icon" href="akomorad.png" />
-<style>
-:root{
-  --brand-red: #c62828;
-  --brand-red-700: #ab2222;
-  --brand-red-900: #7d1717;
-  --brand-red-soft: #fbe9e9;
-  --bg: #ffffff;
-  --text: #0f172a;
-  --muted: #64748b;
-  --card: #ffffff;
-  --stroke: #e5e7eb;
-  --shadow: 0 10px 30px rgba(0,0,0,.06);
-  --radius: 16px;
-}
-*{ box-sizing: border-box; }
-html,body{ height:100%; margin:0; font-family:ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans"; color:var(--text); background:var(--bg);}
-.app{ display:grid; grid-template-columns:280px 1fr; min-height:100vh; }
-.sidebar{ border-right:1px solid var(--stroke); padding:20px; display:flex; flex-direction:column; gap:20px; position:sticky; top:0; height:100vh; background:linear-gradient(180deg, #fff, #fff 60%, var(--brand-red-soft)); }
-.brand{ display:flex; align-items:center; gap:12px; }
-.brand img{ width:40px; height:40px; object-fit:contain; border-radius:10px; }
-.brand h1{ margin:0; font-size:18px; }
-.badge{ display:inline-flex; align-items:center; gap:6px; font-size:12px; color:#fff; background:var(--brand-red); padding:4px 10px; border-radius:999px; box-shadow:var(--shadow); }
-.nav{ display:flex; flex-direction:column; gap:8px; }
-.nav button{ all:unset; display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; cursor:pointer; color:#0f172a; border:1px solid transparent; }
-.nav button.active, .nav button:hover{ background:#fff; border-color:var(--stroke); box-shadow:var(--shadow); }
-header{ display:flex; justify-content:space-between; align-items:center; padding:20px 24px; border-bottom:1px solid var(--stroke); position:sticky; top:0; background:#fff; z-index:5; }
-.search input{ width:340px; max-width:60vw; padding:10px 12px; border-radius:12px; border:1px solid var(--stroke); }
-.profile{ display:flex; align-items:center; gap:12px; }
-.profile .role{ font-size:12px; color:var(--muted); }
-.settings-btn{ border:1px solid var(--stroke); background:#fff; border-radius:12px; padding:8px 12px; cursor:pointer; box-shadow:var(--shadow); }
-main{ padding:24px; }
-.grid{ display:grid; grid-template-columns: repeat(12,1fr); gap:16px; }
-.card{ background:var(--card); border:1px solid var(--stroke); border-radius:var(--radius); box-shadow:var(--shadow); padding:16px; }
-.card h3{ margin:0 0 8px 0; font-size:14px; color:var(--muted); }
-.big{ font-size:34px; font-weight:700; }
-.positive{ color:#057a55; }
-.negative{ color:#b91c1c; }
-.actions{ display:flex; gap:10px; flex-wrap:wrap; }
-.btn{ border:1px solid var(--stroke); background:#fff; padding:10px 14px; border-radius:12px; cursor:pointer; box-shadow:var(--shadow); }
-.btn.primary{ background:var(--brand-red); color:#fff; border-color:transparent; }
-.btn.primary:hover{ background:var(--brand-red-700); }
-.virtual-card{ position:relative; overflow:hidden; border-radius:20px; background: radial-gradient(120% 120% at 0% 0%, var(--brand-red) 0%, var(--brand-red-700) 60%, var(--brand-red-900) 100%); color:#fff; padding:20px; min-height:170px; }
-.vc-row{ display:flex; justify-content:space-between; align-items:center; }
-.vc-chip{ width:40px; height:28px; border-radius:6px; background:linear-gradient(180deg, #ffd27d, #e2b44b); box-shadow:inset 0 0 3px rgba(0,0,0,.25); border:1px solid rgba(0,0,0,.2); }
-.vc-net{ font-weight:800; letter-spacing:1px; background:#ffffff22; padding:6px 10px; border-radius:999px; border:1px solid #ffffff35; }
-.vc-num{ font-family:ui-monospace, Menlo, Consolas, monospace; font-size:20px; letter-spacing:2px; margin:26px 0 10px; }
-.vc-meta{ font-size:12px; opacity:.9; display:flex; gap:16px; flex-wrap:wrap; }
-table{ width:100%; border-collapse:separate; border-spacing:0; }
-thead th{ text-align:left; font-size:12px; color:var(--muted); border-bottom:1px solid var(--stroke); padding:10px 8px; position:sticky; top:0; background:#fff; }
-tbody td{ padding:12px 8px; border-bottom:1px solid var(--stroke); }
-.pill{ display:inline-flex; padding:4px 10px; border-radius:999px; border:1px solid var(--stroke); font-size:12px; background:#fff; }
-.modal-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; align-items:center; justify-content:center; z-index:50; }
-.modal{ width:min(560px, 92vw); background:#fff; border:1px solid var(--stroke); border-radius:20px; box-shadow:var(--shadow); padding:20px; }
-.modal header{ position:static; border-bottom:none; padding:0; margin-bottom:12px; }
-.modal .row{ display:flex; gap:12px; align-items:center; }
-.input{ width:100%; border:1px solid var(--stroke); border-radius:12px; padding:10px 12px; }
-
-@media (max-width:980px){
-  .app{ grid-template-columns:1fr; }
-  .sidebar{ position:relative; height:auto; display:flex; flex-direction:row; overflow-x:auto; }
-  .nav{ flex-direction:row; gap:10px; }
-  .nav button{ flex:1; white-space:nowrap; }
-  header{ flex-direction:column; gap:12px; }
-  .search input{ width:100%; max-width:100%; }
-  .grid{ grid-template-columns:1fr; }
-  .virtual-card{ min-height:150px; }
-  .card{ padding:12px; }
-  main{ padding:12px; }
-}
-
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Akomorad Bank – Webapp</title>
+  <link rel="icon" href="akomorad.png" />
+  <style>
+    :root{
+      --brand-red: #c62828;
+      --brand-red-700: #ab2222;
+      --brand-red-900: #7d1717;
+      --brand-red-soft: #fbe9e9;
+      --bg: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --card: #ffffff;
+      --stroke: #e5e7eb;
+      --shadow: 0 10px 30px rgba(0,0,0,.06);
+      --radius: 16px;
+    }
+    *{ box-sizing: border-box; }
+    html,body{ height:100%; }
+    body{ margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans"; color:var(--text); background:var(--bg); }
+    .app{ display:grid; grid-template-columns: 280px 1fr; min-height:100vh; }
+    .sidebar{ border-right:1px solid var(--stroke); padding:20px; display:flex; flex-direction:column; gap:20px; position:sticky; top:0; height:100vh; background:linear-gradient(180deg, #fff, #fff 60%, var(--brand-red-soft)); }
+    .brand{ display:flex; align-items:center; gap:12px; }
+    .brand img{ width:40px; height:40px; object-fit:contain; border-radius:10px; }
+    .brand h1{ margin:0; font-size:18px; }
+    .badge{ display:inline-flex; align-items:center; gap:6px; font-size:12px; color:#fff; background:var(--brand-red); padding:4px 10px; border-radius:999px; box-shadow:var(--shadow); }
+    .nav{ display:flex; flex-direction:column; gap:8px; }
+    .nav button{ all:unset; display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; cursor:pointer; color:#0f172a; border:1px solid transparent; }
+    .nav button.active, .nav button:hover{ background:#fff; border-color:var(--stroke); box-shadow:var(--shadow); }
+    header{ display:flex; justify-content:space-between; align-items:center; padding:20px 24px; border-bottom:1px solid var(--stroke); position:sticky; top:0; background:#fff; z-index:5; }
+    .search input{ width:340px; max-width:60vw; padding:10px 12px; border-radius:12px; border:1px solid var(--stroke); }
+    .profile{ display:flex; align-items:center; gap:12px; }
+    .profile .role{ font-size:12px; color:var(--muted); }
+    .settings-btn{ border:1px solid var(--stroke); background:#fff; border-radius:12px; padding:8px 12px; cursor:pointer; box-shadow:var(--shadow); }
+    main{ padding:24px; }
+    .grid{ display:grid; grid-template-columns: repeat(12, 1fr); gap:16px; }
+    .card{ background:var(--card); border:1px solid var(--stroke); border-radius:var(--radius); box-shadow:var(--shadow); padding:16px; }
+    .card h3{ margin:0 0 8px 0; font-size:14px; color:var(--muted); }
+    .big{ font-size:34px; font-weight:700; }
+    .positive{ color:#057a55; }
+    .negative{ color:#b91c1c; }
+    .actions{ display:flex; gap:10px; flex-wrap:wrap; }
+    .btn{ border:1px solid var(--stroke); background:#fff; padding:10px 14px; border-radius:12px; cursor:pointer; box-shadow:var(--shadow); }
+    .btn.primary{ background:var(--brand-red); color:#fff; border-color:transparent; }
+    .btn.primary:hover{ background:var(--brand-red-700); }
+    .virtual-card{ position:relative; overflow:hidden; border-radius:20px; background: radial-gradient(120% 120% at 0% 0%, var(--brand-red) 0%, var(--brand-red-700) 60%, var(--brand-red-900) 100%); color:#fff; padding:20px; min-height:170px; }
+    .vc-row{ display:flex; justify-content:space-between; align-items:center; }
+    .vc-chip{ width:40px; height:28px; border-radius:6px; background:linear-gradient(180deg, #ffd27d, #e2b44b); box-shadow:inset 0 0 3px rgba(0,0,0,.25); border:1px solid rgba(0,0,0,.2); }
+    .vc-net{ font-weight:800; letter-spacing:1px; background:#ffffff22; padding:6px 10px; border-radius:999px; border:1px solid #ffffff35; }
+    .vc-num{ font-family: ui-monospace, Menlo, Consolas, monospace; font-size:20px; letter-spacing:2px; margin:26px 0 10px; }
+    .vc-meta{ font-size:12px; opacity:.9; display:flex; gap:16px; flex-wrap:wrap; }
+    table{ width:100%; border-collapse:separate; border-spacing:0; }
+    thead th{ text-align:left; font-size:12px; color:var(--muted); border-bottom:1px solid var(--stroke); padding:10px 8px; position:sticky; top:0; background:#fff; }
+    tbody td{ padding:12px 8px; border-bottom:1px solid var(--stroke); }
+    .pill{ display:inline-flex; padding:4px 10px; border-radius:999px; border:1px solid var(--stroke); font-size:12px; background:#fff; }
+    .modal-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; align-items:center; justify-content:center; z-index:50; }
+    .modal{ width:min(560px, 92vw); background:#fff; border:1px solid var(--stroke); border-radius:20px; box-shadow:var(--shadow); padding:20px; }
+    .modal header{ position:static; border-bottom:none; padding:0; margin-bottom:12px; }
+    .modal .row{ display:flex; gap:12px; align-items:center; }
+    .input{ width:100%; border:1px solid var(--stroke); border-radius:12px; padding:10px 12px; }
+    @media (max-width: 980px){ .app{ grid-template-columns: 1fr; } .sidebar{ position:relative; height:auto; } .search input{ width:200px; } .grid{ grid-template-columns: 1fr; } }
+  </style>
 </head>
 <body>
-<!-- Je hele HTML blijft zoals jij al had, alleen het script hieronder verandert iets voor mobiel + persist -->
-<script>
-// Alles van state, persist, renderAll, promptTx blijft hetzelfde als in jouw code
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="akomorad.png" alt="Akomorad" onerror="this.style.visibility='hidden'">
+        <div>
+          <h1>Akomorad Bank</h1>
+          <div class="badge" title="Kaartnetwerk">AKOMORAD • NETWERK</div>
+        </div>
+      </div>
+      <nav class="nav">
+        <button class="active" data-view="dashboard">🏠 Dashboard</button>
+        <button data-view="rekening">💳 Rekening</button>
+        <button data-view="transacties">📄 Transacties</button>
+        <button data-view="kaarten">🪪 Kaarten</button>
+        <button data-view="instellingen">⚙️ Instellingen</button>
+      </nav>
+      <div style="margin-top:auto; font-size:12px; color:var(--muted);">© <span id="year"></span> Akomorad. Alle rechten voorbehouden.</div>
+    </aside>
 
-// Alleen kleine aanpassing voor responsive modal en buttons op mobiel
-const fmt = new Intl.NumberFormat('nl-BE', { style:'currency', currency:'EUR' });
-const $ = sel => document.querySelector(sel);
-const $$ = sel => Array.from(document.querySelectorAll(sel));
-const defaults = {
-  balance: 141_000_000,
-  iban: 'BE35 2998 2411 3076',
-  cardNumber: '5184 0034 0021 7420',
-  tx: [
-    {date:'2025-08-01', desc:'Salaris – Akomorad', cat:'Werk', amount: 12500},
-    {date:'2025-08-03', desc:'Nieuwe laptop', cat:'Elektronica', amount: -1899},
-    {date:'2025-08-07', desc:'Consulting DOA Diagnostics', cat:'Dienst', amount: 3200},
-    {date:'2025-08-12', desc:'Restaurant', cat:'Eten & Drinken', amount: -86.4},
-    {date:'2025-08-16', desc:'Brandstof', cat:'Vervoer', amount: -64.9},
-  ],
-  profile: { name:'Roadman Loti', role:'Directeur' },
-  redShade: 40,
-};
-const state = JSON.parse(localStorage.getItem('akm_bank_state_v2')||'null') || defaults;
-function persist(){ localStorage.setItem('akm_bank_state_v2', JSON.stringify(state)); }
-function showView(name){ $$('main[id^="view-"]').forEach(m=> m.style.display = 'none'); $('#view-'+name).style.display = 'block'; $$('.nav button').forEach(b=> b.classList.toggle('active', b.dataset.view===name)); }
-function renderBalances(){
-  const income = state.tx.filter(t=>t.amount>0).reduce((a,b)=>a+b.amount,0);
-  const expense = Math.abs(state.tx.filter(t=>t.amount<0).reduce((a,b)=>a+b.amount,0));
-  $('#totalIncome').textContent = fmt.format(income);
-  $('#totalExpense').textContent = fmt.format(expense);
-  $('#pillIncome').textContent = fmt.format(income);
-  $('#pillExpense').textContent = fmt.format(expense);
-  $('#totalBalance').textContent = fmt.format(state.balance);
-  $('#balanceOnAccount').textContent = fmt.format(state.balance);
-  $('#balanceInModal').textContent = fmt.format(state.balance);
-}
-function renderIBAN(){ $('#ibanDisplay').textContent = state.iban; $('#ibanInModal').textContent = state.iban; $('#ibanOnCard').textContent = state.iban; const f1=$('#ibanFront'); if(f1) f1.textContent = state.iban; const f2=$('#ibanFront2'); if(f2) f2.textContent = state.iban; }
-function renderProfile(){ $('#profileNameHeader').textContent=state.profile.name||'—'; $('.profile .role').textContent=state.profile.role||''; $('#profileName').value=state.profile.name; $('#profileRole').value=state.profile.role; }
-function renderCard(){ $('#cardNumber').textContent='•••• •••• •••• '+(state.cardNumber.slice(-4)); $('#cardNumber2').textContent=state.cardNumber.slice(0,4)+' •••• •••• '+(state.cardNumber.slice(-4)); }
-function renderTxTables(filter=''){ const body=$('#txTableBody'); const body2=$('#txTableFull'); body.innerHTML=''; body2.innerHTML=''; const data=state.tx.filter(t=>!filter || (t.desc.toLowerCase().includes(filter)||t.cat.toLowerCase().includes(filter))).sort((a,b)=>b.date.localeCompare(a.date)); for(const t of data){ const tr=document.createElement('tr'); tr.innerHTML=`<td>${t.date}</td><td>${t.desc}</td><td><span class="pill">${t.cat}</span></td><td style="text-align:right; font-weight:600; ${t.amount<0?'color:#b91c1c':'color:#057a55'}">${fmt.format(t.amount)}</td>`; body.appendChild(tr); const tr2=document.createElement('tr'); tr2.innerHTML=`<td>${t.date}</td><td>${t.desc}</td><td><span class="pill">${t.cat}</span></td><td style="text-align:right; font-weight:600; ${t.amount<0?'color:#b91c1c':'color:#057a55'}">${fmt.format(t.amount)}</td><td><button class="btn" data-del>Verwijder</button></td>`; tr2.querySelector('[data-del]').addEventListener('click',()=>{ const idx=state.tx.indexOf(t); if(idx>-1){ state.tx.splice(idx,1); persist(); renderAll(); } }); body2.appendChild(tr2); } }
-function renderAll(){ renderBalances(); renderIBAN(); renderProfile(); renderCard(); renderTxTables($('#searchInput').value.toLowerCase()); }
-function promptTx(isIncome){ const desc=prompt(isIncome?'Omschrijving van inkomst:':'Omschrijving van uitgave:'); if(!desc) return; const cat=prompt('Categorie (bijv. Werk, Eten, Abonnement):') || (isIncome?'Werk':'Algemeen'); const amountStr=prompt('Bedrag in EUR (bv 49.95):'); const amount=parseFloat(String(amountStr).replace(',','.')); if(Number.isNaN(amount)) return alert('Ongeldig bedrag.'); const tx={ date:new Date().toISOString().slice(0,10), desc, cat, amount:isIncome?Math.abs(amount):-Math.abs(amount) }; state.tx.push(tx); state.balance+=tx.amount; persist(); renderAll(); showView('dashboard'); }
-document.addEventListener('click',e=>{ const viewBtn=e.target.closest('[data-view]'); if(viewBtn) showView(viewBtn.dataset.view); });
-$('#btnAddIncome').addEventListener('click',()=>promptTx(true));
-$('#btnAddExpense').addEventListener('click',()=>promptTx(false));
-$('#addTxIncome').addEventListener('click',()=>promptTx(true));
-$('#addTxExpense').addEventListener('click',()=>promptTx(false));
-$('#clearTx').addEventListener('click',()=>{ if(confirm('Alle transacties wissen?')){ state.tx=[]; persist(); renderAll(); } });
-$('#btnReceive').addEventListener('click',()=>showView('rekening'));
-$('#btnSend').addEventListener('click',()=>alert('Verzenden: demo – geen echte overschrijving.'));
-$('#btnAccountModal').addEventListener('click',()=>{$('#accountModal').style.display='flex';});
-$('#closeAccountModal').addEventListener('click',()=>{$('#accountModal').style.display='none';});
-$('#copyIban').addEventListener('click',()=>navigator.clipboard.writeText(state.iban));
-$('#copyIban2').addEventListener('click',()=>navigator.clipboard.writeText(state.iban));
-$('#editIban').addEventListener('click',()=>{ const newIban=prompt('Nieuw IBAN:',state.iban); if(newIban){ state.iban=newIban.trim(); persist(); renderAll(); } });
-$('#searchInput').addEventListener('input',e=>{ renderTxTables(e.target.value.toLowerCase()); });
-const redInput=$('#redShade'); function applyRedShade(v){ const base={r:198,g:40,b:40}; const mix=(c)=>Math.round(255-(255-c)*(v/100)); const r=mix(base.r), g=mix(base.g), b=mix(base.b); document.documentElement.style.setProperty('--brand-red',`rgb(${r},${g},${b})`); document.documentElement.style.setProperty('--brand-red-700',`rgb(${Math.max(0,r-24)},${Math.max(0,g-8)},${Math.max(0,b-8)})`); document.documentElement.style.setProperty('--brand-red-900',`rgb(${Math.max(0,r-60)},${Math.max(0,g-36)},${Math.max(0,b-36)})`); }
-redInput.value=state.redShade; applyRedShade(state.redShade);
-redInput.addEventListener('input',e=>{ state.redShade=Number(e.target.value); applyRedShade(state.redShade); persist(); });
-const nameInput=$('#profileName'); const roleInput=$('#profileRole');
-nameInput.addEventListener('change',()=>{ state.profile.name=nameInput.value; persist(); renderProfile(); });
-roleInput.addEventListener('change',()=>{ state.profile.role=roleInput.value; persist(); renderProfile(); });
-$('#year').textContent=new Date().getFullYear();
-renderAll(); showView('dashboard');
-</script>
+    <section>
+      <header>
+        <div class="search"><input placeholder="Zoek (IBAN, naam, bedrag)…" id="searchInput" /></div>
+        <div class="profile">
+          <div style="text-align:right">
+            <div style="font-weight:600" id="profileNameHeader">Roadman Loti</div>
+            <div class="role">Directeur</div>
+          </div>
+          <button class="settings-btn" data-view="instellingen" title="Instellingen openen">🖊️ Aanpassen</button>
+        </div>
+      </header>
+
+      <main id="view-dashboard">
+        <div class="grid">
+          <div class="card" style="grid-column: span 6;">
+            <h3>Totaal saldo</h3>
+            <div class="big" id="totalBalance">—</div>
+            <div class="actions" style="margin-top:12px;">
+              <button class="btn primary" id="btnReceive">Ontvangen</button>
+              <button class="btn" id="btnSend">Verzenden</button>
+              <button class="btn" id="btnAddIncome">+ Inkomst</button>
+              <button class="btn" id="btnAddExpense">+ Uitgave</button>
+              <button class="btn" id="btnAccountModal">Rekening tonen</button>
+            </div>
+          </div>
+
+          <div class="card" style="grid-column: span 3;">
+            <h3>Gewonnen (Inkomsten)</h3>
+            <div class="big positive" id="totalIncome">—</div>
+          </div>
+
+          <div class="card" style="grid-column: span 3;">
+            <h3>Verliest (Uitgaven)</h3>
+            <div class="big negative" id="totalExpense">—</div>
+          </div>
+
+          <div class="card" style="grid-column: span 6;">
+            <h3>Virtuele kaart</h3>
+            <div class="virtual-card">
+              <div class="vc-row">
+                <div class="vc-chip"></div>
+                <div class="vc-net">AKOMORAD</div>
+              </div>
+              <div class="vc-num" id="cardNumber">**** **** **** 7420</div>
+              <div class="vc-meta">
+                <div>IBAN: <strong id="ibanFront">—</strong></div>
+                <div>KAARTHOUDER: <strong>ROADMAN LOTI</strong></div>
+                <div>GELDIG TOT: <strong>05/09</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="grid-column: span 6;">
+            <h3>Laatste transacties</h3>
+            <div style="max-height:320px; overflow:auto;">
+              <table>
+                <thead>
+                  <tr><th>Datum</th><th>Omschrijving</th><th>Categorie</th><th>Bedrag</th></tr>
+                </thead>
+                <tbody id="txTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <main id="view-rekening" style="display:none;">
+        <div class="grid">
+          <div class="card" style="grid-column: span 8;">
+            <h3>Rekeninggegevens</h3>
+            <div style="font-size:28px; font-weight:800; letter-spacing:1px;" id="ibanDisplay">—</div>
+            <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+              <button class="btn" id="copyIban">IBAN kopiëren</button>
+              <button class="btn" id="editIban">IBAN aanpassen</button>
+            </div>
+            <div style="margin-top:18px; color:var(--muted); font-size:14px;">Klik op “Transacties” om te zien hoeveel je hebt <span class="positive" style="font-weight:700">gewonnen</span> en <span class="negative" style="font-weight:700">verliest</span>.</div>
+          </div>
+          <div class="card" style="grid-column: span 4;">
+            <h3>Huidig saldo</h3>
+            <div class="big" id="balanceOnAccount">—</div>
+          </div>
+        </div>
+      </main>
+
+      <main id="view-transacties" style="display:none;">
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+            <div style="display:flex; gap:12px; align-items:center;">
+              <h3 style="margin:0">Alle transacties</h3>
+              <span class="pill">Inkomsten: <span id="pillIncome" style="margin-left:6px;" class="positive">—</span></span>
+              <span class="pill">Uitgaven: <span id="pillExpense" style="margin-left:6px;" class="negative">—</span></span>
+            </div>
+            <div class="actions">
+              <button class="btn" id="addTxIncome">+ Inkomst</button>
+              <button class="btn" id="addTxExpense">+ Uitgave</button>
+              <button class="btn" id="clearTx">Wissen (alle)</button>
+            </div>
+          </div>
+          <div style="margin-top:12px; max-height:64vh; overflow:auto;">
+            <table>
+              <thead>
+                <tr><th>Datum</th><th>Omschrijving</th><th>Categorie</th><th>Bedrag</th><th>Actie</th></tr>
+              </thead>
+              <tbody id="txTableFull"></tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+
+      <main id="view-kaarten" style="display:none;">
+        <div class="grid">
+          <div class="card" style="grid-column: span 6;">
+            <h3>Akomorad kaart – voorkant</h3>
+            <div class="virtual-card" style="min-height:210px;">
+              <div class="vc-row">
+                <div class="vc-chip"></div>
+                <div class="vc-net">AKOMORAD</div>
+              </div>
+              <div class="vc-num" id="cardNumber2">5184 •••• •••• 7420</div>
+              <div class="vc-meta">
+                <div>IBAN: <strong id="ibanFront2">—</strong></div>
+                <div>NAAM: <strong>ROADMAN LOTI</strong></div>
+                <div>GELDIG TOT: <strong>05/09</strong></div>
+                <div>NETWERK: <strong>Akomorad</strong></div>
+              </div>
+            </div>
+          </div>
+          <div class="card" style="grid-column: span 6;">
+            <h3>Achterkant</h3>
+            <div class="virtual-card" style="min-height:210px; background: radial-gradient(120% 120% at 0% 0%, var(--brand-red-700) 0%, var(--brand-red-900) 100%);">
+              <div style="height:36px; background:#111; margin:-20px -20px 20px; opacity:.85;"></div>
+              <div class="vc-meta" style="justify-content:space-between; width:100%; flex-wrap:wrap;">
+                <div>IBAN: <strong id="ibanOnCard">—</strong></div>
+                <div>CARD: <strong id="cardBack">4871 3049 1419 112</strong></div>
+                <div>CLIENT: <strong>36590 41287</strong></div>
+                <div>CVV: <strong>141</strong></div>
+                <div>EXP: <strong>05/09</strong></div>
+              </div>
+              <div style="position:absolute; right:20px; bottom:16px; font-weight:800; opacity:.9;">AKOMORAD</div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <main id="view-instellingen" style="display:none;">
+        <div class="grid">
+          <div class="card" style="grid-column: span 6;">
+            <h3>Stijl & kleur</h3>
+            <label for="redShade">Rood intensiteit</label>
+            <input id="redShade" type="range" min="0" max="100" value="40" />
+            <p style="color:var(--muted); font-size:14px;">Schuif om het Akomorad-rood donkerder of lichter te maken. Wordt onthouden.</p>
+          </div>
+          <div class="card" style="grid-column: span 6;">
+            <h3>Profiel</h3>
+            <label>Naam</label>
+            <input class="input" id="profileName" placeholder="Jouw naam" />
+            <div style="height:8px"></div>
+            <label>Functie</label>
+            <input class="input" id="profileRole" placeholder="Functie" />
+          </div>
+        </div>
+      </main>
+
+      <div class="modal-backdrop" id="accountModal">
+        <div class="modal">
+          <header style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="font-weight:700;">Jouw rekening</div>
+            <button class="btn" id="closeAccountModal">Sluiten</button>
+          </header>
+          <div>
+            <div class="row">
+              <div style="font-size:26px; font-weight:800; letter-spacing:.5px;" id="ibanInModal">—</div>
+              <button class="btn" id="copyIban2">Kopieer</button>
+            </div>
+            <div style="margin-top:14px; color:var(--muted);">Saldo: <strong id="balanceInModal">—</strong></div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </div>
+
+  <script>
+    const fmt = new Intl.NumberFormat('nl-BE', { style:'currency', currency:'EUR' });
+    const $ = sel => document.querySelector(sel);
+    const $$ = sel => Array.from(document.querySelectorAll(sel));
+
+    const defaults = {
+      balance: 141_000_000,
+      iban: 'BE35 2998 2411 3076',
+      cardNumber: '5184 0034 0021 7420',
+      tx: [
+        {date:'2025-08-01', desc:'Salaris – Akomorad', cat:'Werk', amount: 12500},
+        {date:'2025-08-03', desc:'Nieuwe laptop', cat:'Elektronica', amount: -1899},
+        {date:'2025-08-07', desc:'Consulting DOA Diagnostics', cat:'Dienst', amount: 3200},
+        {date:'2025-08-12', desc:'Restaurant', cat:'Eten & Drinken', amount: -86.4},
+        {date:'2025-08-16', desc:'Brandstof', cat:'Vervoer', amount: -64.9},
+      ],
+      profile: { name:'Roadman Loti', role:'Directeur' },
+      redShade: 40,
+    };
+
+    const state = JSON.parse(localStorage.getItem('akm_bank_state_v2')||'null') || defaults;
+
+    function showView(name){ $$('main[id^="view-"]').forEach(m=> m.style.display = 'none'); $('#view-'+name).style.display = 'block'; $$('.nav button').forEach(b=> b.classList.toggle('active', b.dataset.view===name)); }
+
+    function renderBalances(){
+      const income = state.tx.filter(t=>t.amount>0).reduce((a,b)=>a+b.amount,0);
+      const expense = Math.abs(state.tx.filter(t=>t.amount<0).reduce((a,b)=>a+b.amount,0));
+      $('#totalIncome').textContent = fmt.format(income);
+      $('#totalExpense').textContent = fmt.format(expense);
+      $('#pillIncome').textContent = fmt.format(income);
+      $('#pillExpense').textContent = fmt.format(expense);
+      $('#totalBalance').textContent = fmt.format(state.balance);
+      $('#balanceOnAccount').textContent = fmt.format(state.balance);
+      $('#balanceInModal').textContent = fmt.format(state.balance);
+    }
+
+    function renderIBAN(){
+      $('#ibanDisplay').textContent = state.iban;
+      $('#ibanInModal').textContent = state.iban;
+      $('#ibanOnCard').textContent = state.iban;
+      const f1=$('#ibanFront'); if(f1) f1.textContent = state.iban;
+      const f2=$('#ibanFront2'); if(f2) f2.textContent = state.iban;
+    }
+
+    function renderProfile(){
+      const headerName = $('#profileNameHeader');
+      if(headerName) headerName.textContent = state.profile.name || '—';
+      $('.profile .role').textContent = state.profile.role || '';
+      $('#profileName').value = state.profile.name;
+      $('#profileRole').value = state.profile.role;
+    }
+
+    function renderCard(){
+      $('#cardNumber').textContent = '•••• •••• •••• ' + (state.cardNumber.slice(-4));
+      $('#cardNumber2').textContent = state.cardNumber.slice(0,4) + ' •••• •••• ' + (state.cardNumber.slice(-4));
+    }
+
+    function renderTxTables(filter=''){
+      const body = $('#txTableBody');
+      const body2 = $('#txTableFull');
+      body.innerHTML = ''; body2.innerHTML='';
+      const data = state.tx.filter(t => !filter || (t.desc.toLowerCase().includes(filter) || t.cat.toLowerCase().includes(filter))).sort((a,b)=> b.date.localeCompare(a.date));
+      for(const t of data){
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${t.date}</td><td>${t.desc}</td><td><span class="pill">${t.cat}</span></td><td style="text-align:right; font-weight:600; ${t.amount<0? 'color:#b91c1c':'color:#057a55'}">${fmt.format(t.amount)}</td>`;
+        body.appendChild(tr);
+
+        const tr2 = document.createElement('tr');
+        tr2.innerHTML = `<td>${t.date}</td><td>${t.desc}</td><td><span class="pill">${t.cat}</span></td><td style="text-align:right; font-weight:600; ${t.amount<0? 'color:#b91c1c':'color:#057a55'}">${fmt.format(t.amount)}</td><td><button class="btn" data-del>Verwijder</button></td>`;
+        tr2.querySelector('[data-del]').addEventListener('click', ()=>{
+          const idx = state.tx.indexOf(t);
+          if(idx>-1){ state.tx.splice(idx,1); persist(); renderAll(); }
+        });
+        body2.appendChild(tr2);
+      }
+    }
+
+    function persist(){ localStorage.setItem('akm_bank_state_v2', JSON.stringify(state)); }
+
+    function renderAll(){ renderBalances(); renderIBAN(); renderProfile(); renderCard(); renderTxTables($('#searchInput').value.toLowerCase()); }
+
+    function promptTx(isIncome){
+      const desc = prompt(isIncome? 'Omschrijving van inkomst:' : 'Omschrijving van uitgave:');
+      if(!desc) return;
+      const cat = prompt('Categorie (bijv. Werk, Eten, Abonnement):') || (isIncome?'Werk':'Algemeen');
+      const amountStr = prompt('Bedrag in EUR (bv 49.95):');
+      const amount = parseFloat(String(amountStr).replace(',', '.'));
+      if(Number.isNaN(amount)) return alert('Ongeldig bedrag.');
+      const tx = { date: new Date().toISOString().slice(0,10), desc, cat, amount: isIncome? Math.abs(amount): -Math.abs(amount) };
+      state.tx.push(tx);
+      state.balance += tx.amount;
+      persist(); renderAll(); showView('dashboard');
+    }
+
+    document.addEventListener('click', (e)=>{ const viewBtn = e.target.closest('[data-view]'); if(viewBtn){ showView(viewBtn.dataset.view); } });
+
+    $('#btnAddIncome').addEventListener('click', ()=> promptTx(true));
+    $('#btnAddExpense').addEventListener('click', ()=> promptTx(false));
+    $('#addTxIncome').addEventListener('click', ()=> promptTx(true));
+    $('#addTxExpense').addEventListener('click', ()=> promptTx(false));
+    $('#clearTx').addEventListener('click', ()=>{ if(confirm('Alle transacties wissen?')){ state.tx = []; persist(); renderAll(); } });
+
+    $('#btnReceive').addEventListener('click', ()=> showView('rekening'));
+    $('#btnSend').addEventListener('click', ()=> alert('Verzenden: demo – geen echte overschrijving.'));
+
+    $('#btnAccountModal').addEventListener('click', ()=>{ $('#accountModal').style.display = 'flex'; });
+    $('#closeAccountModal').addEventListener('click', ()=>{ $('#accountModal').style.display = 'none'; });
+
+    $('#copyIban').addEventListener('click', ()=> navigator.clipboard.writeText(state.iban));
+    $('#copyIban2').addEventListener('click', ()=> navigator.clipboard.writeText(state.iban));
+
+    $('#editIban').addEventListener('click', ()=>{ const newIban = prompt('Nieuw IBAN:', state.iban); if(newIban){ state.iban = newIban.trim(); persist(); renderAll(); } });
+    $('#searchInput').addEventListener('input', (e)=>{ renderTxTables(e.target.value.toLowerCase()); });
+
+    const redInput = $('#redShade');
+    function applyRedShade(v){ const base = { r: 198, g: 40, b: 40 }; const mix = (c)=> Math.round(255 - (255-c)* (v/100)); const r = mix(base.r), g = mix(base.g), b = mix(base.b); document.documentElement.style.setProperty('--brand-red', `rgb(${r}, ${g}, ${b})`); document.documentElement.style.setProperty('--brand-red-700', `rgb(${Math.max(0,r-24)}, ${Math.max(0,g-8)}, ${Math.max(0,b-8)})`); document.documentElement.style.setProperty('--brand-red-900', `rgb(${Math.max(0,r-60)}, ${Math.max(0,g-36)}, ${Math.max(0,b-36)})`); }
+    redInput.value = state.redShade; applyRedShade(state.redShade);
+    redInput.addEventListener('input', (e)=>{ state.redShade = Number(e.target.value); applyRedShade(state.redShade); persist(); });
+
+    const nameInput = $('#profileName'); const roleInput = $('#profileRole');
+    nameInput.addEventListener('change', ()=>{ state.profile.name = nameInput.value; persist(); renderProfile(); });
+    roleInput.addEventListener('change', ()=>{ state.profile.role = roleInput.value; persist(); renderProfile(); });
+
+    $('#year').textContent = new Date().getFullYear();
+    renderAll();
+    showView('dashboard');
+  </script>
 </body>
 </html>
